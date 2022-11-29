@@ -5,10 +5,12 @@ import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@ToString
 public class PersonDto {
 
   @NotBlank(message = "Ovo polje je obavezno")

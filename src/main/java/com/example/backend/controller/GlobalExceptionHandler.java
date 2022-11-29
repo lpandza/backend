@@ -4,6 +4,7 @@ import com.example.backend.exception.ErrorMessage;
 import com.example.backend.exception.ErrorMessageBadRequest;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -29,5 +30,11 @@ public class GlobalExceptionHandler {
         .map(error -> (FieldError) error)
         .map(error -> new ErrorMessageBadRequest(error.getField(), error.getDefaultMessage()))
         .collect(Collectors.toList());
+  }
+
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  @ExceptionHandler(EntityNotFoundException.class)
+  public ErrorMessage resourceNotFoundException(EntityNotFoundException ex) {
+    return new ErrorMessage(ex.getMessage(), ex.getCause());
   }
 }

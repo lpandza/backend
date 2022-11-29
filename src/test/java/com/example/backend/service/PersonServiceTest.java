@@ -24,11 +24,14 @@ public class PersonServiceTest {
 
   private PersonService personService;
 
+  private FileService fileService;
+
   @BeforeEach
   public void setUp() {
     personRepository = mock(PersonRepository.class);
     personMapper = mock(PersonMapper.class);
-    personService = new PersonServiceImpl(personRepository, personMapper);
+    fileService = mock(FileService.class);
+    personService = new PersonServiceImpl(personRepository, personMapper, fileService);
   }
 
   @Test

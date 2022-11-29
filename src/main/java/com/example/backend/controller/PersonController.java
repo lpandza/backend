@@ -2,13 +2,17 @@ package com.example.backend.controller;
 
 import com.example.backend.model.dto.PersonDto;
 import com.example.backend.service.PersonService;
+import java.io.IOException;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -33,9 +37,25 @@ public class PersonController {
         .orElseGet(() -> ResponseEntity.badRequest().build());
   }
 
-  // TODO: 26.11.2022. get by oib
+  @GetMapping("/with-oib")
+  public ResponseEntity<PersonDto> getByOib(@RequestParam String oib) {
+    return personService.findByOib(oib)
+        .map(personDto -> ResponseEntity.status(HttpStatus.OK).body(personDto))
+        .orElseGet(() -> ResponseEntity.notFound().build());
+  }
+
+  @PostMapping("/{oib}/file")
+  public ResponseEntity<PersonDto> generateFile(@PathVariable String oib) throws IOException {
+    return personService.writePersonToFile(oib)
+        .map(personDto -> ResponseEntity.status(HttpStatus.OK).body(personDto))
+        .orElseGet(() -> ResponseEntity.notFound().build());
+  }
 
 
-  // TODO: 26.11.2022. delete by oib
+  @DeleteMapping
+  public ResponseEntity<HttpStatus> deletePerson(@RequestParam String oib) throws IOException {
+    personService.deletePerson(oib);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
 
 }
